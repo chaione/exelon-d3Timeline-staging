@@ -205,7 +205,7 @@ function retrieveDeliveries () {
   })
 }
 
-function calculateDeliveryLocation (deliveriesData) { 
+function calculateDeliveryLocation (deliveriesData) {
   _.each(deliveriesData, function (currentDelivery) {
     if (!currentDelivery.currentLocation) {
       var name = utils.getLocationNameFromRawDelivery(currentDelivery)

@@ -633,11 +633,11 @@ function appendCurrentWorkflowWithSubsteps (currentWorkflow, d) {
 
     // on right side of now
     currentWorkflow.append('line') // future end of substep 2
-      .attr('x1', function (d, i) { 
+      .attr('x1', function (d, i) {
         return xScale(_now)
       })
       .attr('y1', function (d, i) { return 0;})
-      .attr('x2', function (d, i) { 
+      .attr('x2', function (d, i) {
         return xScale(
           _now.getTime() + searchEPT * oneMinute - 60000
         )
@@ -655,12 +655,12 @@ function appendCurrentWorkflowWithSubsteps (currentWorkflow, d) {
       })
 
     currentWorkflow.append('line') // release notreached
-      .attr('x1', function (d, i) { 
+      .attr('x1', function (d, i) {
         return xScale(
           _now.getTime() + searchEPT * oneMinute
         )
       })
-      .attr('x2', function (d, i) { 
+      .attr('x2', function (d, i) {
         return xScale(
           _now.getTime() + (searchEPT + releaseEPT) * oneMinute - 60000
         )

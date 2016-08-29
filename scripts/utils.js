@@ -95,6 +95,7 @@ function _detailCalculateDelay (delivery) {
         subDelays[2] = utils.calculateDelay(workflow['search-end'], workflow['ended-at'], workflow.releaseEPT)
       } else {
         var currentSubStep = utils.getCurrentSubstep(workflow)
+        console.log(currentSubStep)
         if (currentSubStep === 1) {
           subDelays[0] = utils.calculateDelay(workflow['started-at'], _now, workflow.nonSearchEPT)
           subDelays[1] = 0
@@ -105,7 +106,7 @@ function _detailCalculateDelay (delivery) {
           subDelays[2] = 0
         } else {
           subDelays[0] = utils.calculateDelay(workflow['started-at'], workflow['nonsearch-end'], workflow.nonSearchEPT)
-          subDelays[1] = utils.calculateDelay(workflow['nonsearche-end'], workflow['search-end'], workflow.searchEPT)
+          subDelays[1] = utils.calculateDelay(workflow['nonsearch-end'], workflow['search-end'], workflow.searchEPT)
           subDelays[2] = utils.calculateDelay(workflow['search-end'], _now, workflow.releaseEPT)
         }
       }

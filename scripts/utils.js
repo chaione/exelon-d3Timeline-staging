@@ -324,7 +324,7 @@ function _calculateWorkflowETAs (workflows) {
         var previouseWorkflow = orderedWorkflows[index - 1]
         if (utils.inSubstepLocation(previouseWorkflow)) {
           workflow.originalETA = new Date(previouseWorkflow.originalETA.getTime() + (
-            previouseWorkflow.nonSearchEPT, previouseWorkflow.searchEPT, previouseWorkflow.releaseEPT
+            previouseWorkflow.nonSearchEPT + previouseWorkflow.searchEPT + previouseWorkflow.releaseEPT
           ) * 60000)
         } else {
           workflow.originalETA = previouseWorkflow.originalETA.getTime() + previouseWorkflow.EPT * 60000

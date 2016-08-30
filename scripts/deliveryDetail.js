@@ -478,6 +478,7 @@ function displayDetail (delivery) {
       var EPT = d.EPT
 
       if (startedAt & startedAt < _now) {
+        var yPos = -3
         if (utils.inSubstepLocation(d)) {
           var substep1State = utils.calculateDelayState(startedAt, nonsearchEnd, nonsearchEPT)
           var substep2State = utils.calculateDelayState(nonsearchEnd, searchEnd, searchEPT)
@@ -485,7 +486,7 @@ function displayDetail (delivery) {
 
           workflow.append('text')
             .attr('x1', xScale(startedAt))
-            .attr('y', 14)
+            .attr('y', yPos)
             .text(function (d, i) {
               var id = d.locationOrder[d.step - 1]
               return _.find(_DS.locations, {id: id}).abbr
@@ -498,7 +499,7 @@ function displayDetail (delivery) {
           if (nonsearchEnd & nonsearchEnd < _now) {
             workflow.append('text')
               .attr('x', function (d) { return xScale(nonsearchEnd)})
-              .attr('y', 14)
+              .attr('y', yPos)
               .text(2)
               .attr('class', function (d) {
                 return 'detailActualLabels ' + substep2State
@@ -509,7 +510,7 @@ function displayDetail (delivery) {
           if (searchEnd & searchEnd < _now) {
             workflow.append('text')
               .attr('x', function (d) { return xScale(searchEnd & searchEnd) })
-              .attr('y', 14)
+              .attr('y', yPos)
               .text(3)
               .attr('class', function (d) {
                 return 'detailActualLabels ' + substep3State
@@ -519,7 +520,7 @@ function displayDetail (delivery) {
         } else {
           workflow.append('text')
             .attr('x', function (d) { return xScale(startedAt) })
-            .attr('y', 14)
+            .attr('y', yPos)
             .text(function (workflow, i) {
               var locationName = utils.getLocationNameFromWorkflow(d)
               return _.find(_DS.LOCATION_META, {name: locationName}).abbr

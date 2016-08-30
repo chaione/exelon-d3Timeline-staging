@@ -446,13 +446,7 @@ function appendWorkflow (workflow, d) {
         })
         .attr('y2', function (d, i) { return 0 })
         .attr('class', function (d) {
-          if (d.state === 'late') {
-            return 'workflow late'
-          } else if (d.state === 'early') {
-            return 'workflow ahead'
-          } else {
-            return 'workflow'
-          }
+          return 'workflow ' + d.states[0]
         })
 
       workflow.append('svg:path')
@@ -479,15 +473,7 @@ function appendWorkflow (workflow, d) {
         .style('stroke-dasharray', ('2, 2'))
         .style('stroke-width', 4)
         .attr('class', function (d) {
-          if (d.state === 'late') {
-            return 'workflow lateGradient'
-          }
-
-          if (d.state === 'early') {
-            return 'workflow aheadGradient'
-          }
-
-          return 'workflow onTimeGradient'
+          return 'workflow ' + d.states[0] + 'Gradient'
         })
     } else if (startedAt === null && endedAt === null) { // workflow hasnt started yet
       workflow.append('line')

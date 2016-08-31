@@ -393,7 +393,15 @@ function displayDetail (delivery) {
               d.originalETA.getTime() + nonsearchEPT * 60000
             )
           })
-          .attr('y', -3)
+          .attr('y', function (d) {
+            var distance = xScale(d.originalETA.getTime() + nonsearchEPT * 60000) - xScale(d.originalETA)
+            console.log('2222', distance)
+            if (distance < 24) {
+              return 13
+            } else {
+              return -3
+            }
+          })
           .text(function (d, i) {
             return 2
           })
@@ -406,7 +414,24 @@ function displayDetail (delivery) {
               d.originalETA.getTime() + nonsearchEPT * 60000 + searchEPT * 60000
             )
           })
-          .attr('y', -3)
+          .attr('y', function (d) {
+            var distance2 = xScale(d.originalETA.getTime() + nonsearchEPT * 60000) - xScale(d.originalETA)
+            if (distance2 >= 24) {
+              var distance32 = xScale(d.originalETA.getTime() + nonsearchEPT * 60000 + searchEPT * 60000) - xScale(d.originalETA.getTime() + nonSearchEPT * 60000)
+              if (distance32 > 10) {
+                return -3
+              } else {
+                return 13
+              }
+            } else {
+              var distance31 = xScale(d.originalETA.getTime() + nonsearchEPT * 60000 + searchEPT * 60000) - xScale(d.originalETA)
+              if (distance31 >= 24) {
+                return -3
+              } else {
+                return 13
+              }
+            }
+          })
           .text(function (d, i) {
             return 3
           })

@@ -60,6 +60,30 @@ var _POSTS = [
   { fullName: 'Sally Port', abbr: 'sp'   }
 ]
 
+var EVENTS = [
+  { name: 's1_arrived',                  to: ['poc']               },
+  { name: 's1_d10_cover',                to: ['d10']               },
+  { name: 's1_last_step_completed',      to: ['d10']               },
+  { name: 's1_abort',                    to: ['s1']                },
+  { name: 's1_search_abort',             to: ['d10', 'poc', 'sas'] },
+  { name: 's1_deny_entry',               to: ['d10', 'poc', 'sas'] },
+  { name: 's1_poc_release_vehicle',      to: ['poc']               },
+  { name: 's1_d10_release_vehicle',      to: ['d10']               },
+  { name: 's1_d1_release_vehicle',       to: ['d1']                },
+  { name: 's1_vvro_release_vehicle',     to: ['vvro']              },
+  { name: 's1_release_vehicle',          to: ['vvro']              },
+  { name: 'sp_start_search',             to: ['sas']               },
+  { name: 'sp_search_complete',          to: ['sas']               },
+  { name: 'sp_search_abort',             to: ['sas', 'poc']        },
+  { name: 'sp_deny_entry',               to: ['sas', 'poc']        },
+  { name: 'sp_sas_release_vehicle',      to: ['sas']               },
+  { name: 'sp_poc_release_vehicle',      to: ['poc']               },
+  { name: 'driver_enroute_Limerick',     to: ['sas']               },
+  { name: 'seals_manifest_get_approval', to: ['sas']               },
+  { name: 'seals_manifest_accept',       to: ['seals']             },
+  { name: 'seals_manifest_reject',       to: ['seals']             }
+]
+
 var _VEHICLE_TYPE_TO_IMG = {
   'non_common_carrier': 'noncommon',
   'common_carrier': 'common',

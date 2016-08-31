@@ -22,7 +22,8 @@
 // User Defined Variables
 var rowHeight = 45
 var _X_AXIS_HEIGHT = 30
-var _X_AXIS_WIDTH = 4500
+var _X_AXIS_WIDTH = 5760 // 1 min = 2 px, 48 hours = 2880 mins = 5760 px
+
 var stationTextHeight = 20
 var stationTextPadding = {top: 10, right: 0, bottom: 0, left: 10}
 
@@ -94,7 +95,7 @@ var bearerToken = ''
 // var bearerToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicm9sZSIsImlhdCI6MTQ3MDMxNzQ2MX0.86TwRbaqlfu7pv14NZ6ZF-RZKfUDLXtm9-5_2TGf4Mg'
 
 var titleHeight = 83
-// Calculated Variables
+// Calculated variables
 var innerWidth = outerWidth - margin.left - margin.right
 var innerHeight = outerHeight - margin.top - margin.bottom
 var unixHour = 1000 * 60 * 60
@@ -155,7 +156,8 @@ var customShapes = {
 
 var xScale = d3.time.scale.utc()
   .domain(
-    [+new Date(nowYear, nowMonth, yesterday.getDate(), 12), +new Date(nowYear, nowMonth, tomorrow.getDate(), 12)]
+    [+new Date(nowYear, nowMonth, yesterday.getDate(), 12),
+     +new Date(tomorrow.getFullYear(), tomorrow.getMonth() , tomorrow.getDate(), 12)]
   )
   .range(
     [0, _X_AXIS_WIDTH]
@@ -167,7 +169,8 @@ var yDeliveryScale = d3.scale.linear()
 
 var viewportScale = d3.time.scale.utc()
   .domain(
-    [+new Date(nowYear, nowMonth, yesterday.getDate(), 12) + unixStartHours, +new Date(nowYear, nowMonth, tomorrow.getDate(), 12) - unixStartHours]
+    [+new Date(nowYear, nowMonth, yesterday.getDate(), 12) + unixStartHours,
+     +new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 12) - unixStartHours]
   )
   .range([0, -1 * _X_AXIS_WIDTH + outerWidth])
 
@@ -323,4 +326,3 @@ function setupSvgStructure () {
     .attr('class', 'deliveryStaticGroup')
     .attr('transform', 'translate(' + 0 + ',' + 0 + ')')
 }
-

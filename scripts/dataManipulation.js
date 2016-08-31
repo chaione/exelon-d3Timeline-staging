@@ -161,7 +161,7 @@ function retrieveDeliveries () {
 
       _pocsAPIData = {}
       var pocs = _.filter(apiResponse.included, {type: 'pocs'})
-      _.each(pocs, poc => {
+      _.each(pocs, function (poc) {
         _pocsAPIData[poc.id] = poc.attributes
       })
 

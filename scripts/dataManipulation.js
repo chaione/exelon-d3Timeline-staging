@@ -115,8 +115,17 @@ function processApiData (workflowsData) {
     for (var j = 0; j < tempStation.values.length; j++) {
       var tempDelivery = tempStation.values[j]
 
+      var deniedEvents = _.filter(_DS.events, function (event) {
+        return event.deliveryId === tempDelivery.key &&
+          (event.name === 's1_deny_entry' || event.name === 'sp_deny_entry')
+      })
+      var status
+      if (deniedEvents.length > 0) {
+        status = 'denied'
+      }
+
       _deliveryIndexInfo.push({
-        status: _.find(_DS.deliveries, {id: tempDelivery.key}).attributes.status,
+        status: status,
         deliveryId: tempDelivery.key,
         yIndex: tempDelivery.yIndex
       })

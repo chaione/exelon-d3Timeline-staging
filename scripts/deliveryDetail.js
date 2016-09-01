@@ -79,7 +79,13 @@ function displayDetail (delivery) {
     })
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-  if (delivery.status === 'denied') {
+  var deniedEvents = _.filter(_DS.events, function (event) {
+    return event.deliveryId === delivery.id &&
+    (event.name === 's1_deny_entry' || event.name === 'sp_deny_entry')
+  })
+
+  var status = _.find(_deliveryIndexInfo, {deliveryId: delivery.key}).status
+  if (status === 'denied') {
     var detailDeliveryStatusText = detailSvg.append('text')
       .attr('x', outerWidth - 20)
       .attr('y', detailDeliveryRectY + detailDeliveryRectHeight - 20)

@@ -1,3 +1,25 @@
+function _prepareEventsForRendering (events) {
+  // take fully detailed events
+  // expand to multiple POSTS
+  // and get rid of unnecessary attribuets
+  // we only care about {timestamp, endtimestamp, responsible, yIndex}
+
+  var responders = _.map(_POSTS, 'abbr')
+  var simplifiedEvents = _.map(events, function (event) {
+    return _.map(event.to, function (responder) {
+      return {
+        timestamp: event.timestamp,
+        endTimestamp: event.endTimestamp,
+        responsible: event.responsible,
+        yIndex: _.indexOf(responders, responder),
+        name: event.name
+      }
+    })
+  })
+
+  return _.flatten(simplifiedEvents)
+}
+
 function _getEPTFromWorkflow (workflow) {
   var locationName = utils.getLocationNameFromWorkflow(workflow)
   return _.find(_DS.LOCATION_META, {name: locationName}).epts
@@ -387,4 +409,5 @@ var utils = {
   getVehicleIconSuffix: _getVehicleIconSuffix,
   getEPTFromWorkflow: _getEPTFromWorkflow,
   calculateDelay: _calculateDelay,
+  prepareEventsForRendering: _prepareEventsForRendering,
 }

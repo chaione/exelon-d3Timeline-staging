@@ -2,7 +2,6 @@
 function pairEvents (apiResponse) {
   var rawEvents = _.filter(apiResponse.included, {type: 'events'})
 
-
   // Inital setup and attributes assign
   var events = _.map(rawEvents, function (event) {
     var result = {
@@ -31,13 +30,15 @@ function pairEvents (apiResponse) {
       var responsers = _.map(_POSTS, 'abbr')
       var postIndex = _.indexOf(responsers, posts[1])
       if (postIndex !== -1) {
+        var eventMeta = _.find(_DS.EVENTS_META, {name: event.name})
         event.responser = posts[1]
+        event.responsible = eventMeta.responsible
+        event.to = eventMeta.to
         event.yIndex = postIndex
       }
     }
   })
 
-  // TODO: how to draw stuff like s1_search_completed
   return _.filter(events, function (event) {
     return event.isRequest && event.yIndex
   })

@@ -576,11 +576,16 @@ function displayDetail (delivery) {
     .attr('class', 'detailScheduled')
     .attr('transform', 'translate(' + 0 + ',' + (detailPadding + eventHeight * 4) + ')')
 
+  deliveryEvents = utils.prepareEventsForRendering(deliveryEvents)
+
   detailDeliveryDataEventsGroup
     .selectAll('.detailEventLine')
     .data(deliveryEvents)
     .enter()
     .append('line')
+    .filter(function (d) {
+      return d.responsible
+    })
     .attr('x1', function (d) {
       return xScale(
         d.timestamp.getTime()
@@ -600,7 +605,7 @@ function displayDetail (delivery) {
       return eventHeight * d.yIndex
     })
     .attr('class', function (d) {
-      return 'detailEventLine'
+      return 'detailEventLine ' + d.name
     })
     .style('stroke-dasharray', ('1, 1'))
 
@@ -612,7 +617,9 @@ function displayDetail (delivery) {
     .attr('cx', function (d) {return xScale(d.timestamp)})
     .attr('cy', function (d) {return eventHeight * d.yIndex})
     .attr('r', 3)
-    .attr('class', 'detailEventStart')
+    .attr('class', function (d) {
+      return 'detailEventStart ' + d.name
+    })
 
   detailDeliveryDataEventsGroup
     .selectAll('.detailEventEnd')

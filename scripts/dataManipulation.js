@@ -179,15 +179,11 @@ function retrieveDeliveries () {
 
       var apiWorkflows = _.filter(apiResponse.included, {type: 'workflows'})
 
-      apiWorkflows = apiWorkflows.map(function (workflow) {
+      var cleandWorkflows = apiWorkflows.map(function (workflow) {
         var deliveryId = workflow.relationships.delivery['data']['id']
         var deliveryRaw = _.find(_DS.deliveries, {id: deliveryId})
         workflow.attributes.id = workflow['id']
         workflow.attributes.deliveryId = parseInt(deliveryId)
-
-        workflow.attributes.locationOrder = _.map(deliveryRaw.relationships.locations.data, function (location) {
-          return parseInt(location.id)
-        })
 
         var importantDates = [
           'started-at',
@@ -198,10 +194,12 @@ function retrieveDeliveries () {
           workflow.attributes[item] = utils.getNullOrDate(workflow.attributes[item])
         })
 
+        workflow.attributes.locationOrder = utils.getLocationOrderForDelivery(workflow.attributes.deliveryId, apiWorkflows)
+
         return workflow.attributes
       })
 
-      _.each(apiWorkflows, function (workflow) {
+      _.each(cleandWorkflows, function (workflow) {
         var epts = utils.getEPTFromWorkflow(workflow)
         workflow.EPT = epts[0]
         workflow.nonSearchEPT = epts[0]
@@ -209,8 +207,8 @@ function retrieveDeliveries () {
         workflow.releaseEPT = epts[2]
       })
 
-      apiWorkflows = utils.calculateWorkflowETAs(apiWorkflows)
-      processApiData(apiWorkflows)
+      cleandWorkflows = utils.calculateWorkflowETAs(cleandWorkflows)
+      processApiData(cleandWorkflows)
     }
   })
 }

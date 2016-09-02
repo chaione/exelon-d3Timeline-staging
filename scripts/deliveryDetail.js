@@ -401,7 +401,6 @@ function displayDetail (delivery) {
           })
           .attr('y', function (d) {
             var distance = xScale(d.originalETA.getTime() + nonsearchEPT * 60000) - xScale(d.originalETA)
-            console.log('2222', distance)
             if (distance < 24) {
               return 13
             } else {

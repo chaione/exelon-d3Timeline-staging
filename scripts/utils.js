@@ -1,3 +1,13 @@
+function _getLocationOrderForDelivery (deliveryId, workflows) {
+  var deliveryWorkflows = _.filter(workflows, function (workflow) {
+    return workflow.attributes.deliveryId === deliveryId
+  })
+
+  return _.map(deliveryWorkflows, function (workflow) {
+    return parseInt(workflow.relationships.location.data.id)
+  })
+}
+
 function _prepareEventsForRendering (events) {
   // take fully detailed events
   // expand to multiple POSTS
@@ -410,4 +420,5 @@ var utils = {
   getEPTFromWorkflow: _getEPTFromWorkflow,
   calculateDelay: _calculateDelay,
   prepareEventsForRendering: _prepareEventsForRendering,
+  getLocationOrderForDelivery: _getLocationOrderForDelivery,
 }

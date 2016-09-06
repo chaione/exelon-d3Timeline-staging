@@ -259,10 +259,10 @@ function displayDetail (delivery) {
           })
           .attr('y2', 0)
           .attr('class', function (d) {
-            if (d.originalETA > _now) {
+            // if (d.originalETA > _now) {
               return 'detailScheduledLine2 notReached'
-            }
-            return 'detailScheduledLine2'
+            // }
+            // return 'detailScheduledLine2'
           })
 
         workflow.append('line')
@@ -279,10 +279,10 @@ function displayDetail (delivery) {
           })
           .attr('y2', 0)
           .attr('class', function (d) {
-            if (d.originalETA > _now) {
+            // if (d.originalETA > _now) {
               return 'detailScheduledLine2 notReached'
-            }
-            return 'detailScheduledLine2'
+            // }
+            // return 'detailScheduledLine2'
           })
 
         workflow.append('line')
@@ -304,10 +304,10 @@ function displayDetail (delivery) {
           })
           .attr('y2', 0)
           .attr('class', function (d) {
-            if (d.originalETA > _now) {
+            // if (d.originalETA > _now) {
               return 'detailScheduledLine2 notReached'
-            }
-            return 'detailScheduledLine2'
+            // }
+            // return 'detailScheduledLine2'
           })
 
         workflow.append('svg:path')
@@ -342,10 +342,10 @@ function displayDetail (delivery) {
           })
           .attr('y2', 0)
           .attr('class', function (d) {
-            if (d.originalETA > _now) {
+            // if (d.originalETA > _now) {
               return 'detailScheduledLine2 notReached'
-            }
-            return 'detailScheduledLine2'
+            // }
+            // return 'detailScheduledLine2'
           })
 
         workflow.append('svg:path')
@@ -364,7 +364,7 @@ function displayDetail (delivery) {
       }
     })
 
-  // Labels
+  // Scheduled Line Port Lables
   detailDeliveryDataScheduledGroup
     .selectAll('.detailScheduledLabels')
     .data(delivery.values)
@@ -391,7 +391,7 @@ function displayDetail (delivery) {
             return utils.getLocationAbbrFromLocationName(locationName) + '.1'
           })
           .attr('class', 'detailScheduledLabels')
-          .attr('font-size', 14 + 'px')
+          .attr('font-size', _DS.TIMELINE_PORT_LABEL_SIZE)
 
         workflow.append('text')
           .attr('x', function (d) {
@@ -411,7 +411,7 @@ function displayDetail (delivery) {
             return 2
           })
           .attr('class', 'detailScheduledLabels')
-          .attr('font-size', 14 + 'px')
+          .attr('font-size', _DS.TIMELINE_PORT_LABEL_SIZE)
 
         workflow.append('text')
           .attr('x', function (d) {
@@ -441,7 +441,7 @@ function displayDetail (delivery) {
             return 3
           })
           .attr('class', 'detailScheduledLabels')
-          .attr('font-size', 14 + 'px')
+          .attr('font-size', _DS.TIMELINE_PORT_LABEL_SIZE)
       } else {
         workflow.append('text')
           .attr('x', function (d) {
@@ -458,7 +458,7 @@ function displayDetail (delivery) {
             return utils.getLocationAbbrFromLocationName(locationName)
           })
           .attr('class', 'detailScheduledLabels')
-          .attr('font-size', 14 + 'px')
+          .attr('font-size', _DS.TIMELINE_PORT_LABEL_SIZE)
       }
     })
 
@@ -489,79 +489,165 @@ function displayDetail (delivery) {
       prevData = d
     })
 
-  detailDeliveryDataActualGroup
-    .selectAll('.detailActualLabels')
-    .data(delivery.values)
-    .enter()
-    .append('g')
-    .each(function (d) {
-      var workflow = d3.select(this)
+  // Actual line port lables
+  var firstWorkflow = _.first(delivery.values)
+  var lastWorkflow = _.last(delivery.values)
+  if (firstWorkflow['started-at'] && !lastWorkflow['ended-at']) {
+    detailDeliveryDataActualGroup
+      .selectAll('.detailActualLabels')
+      .data(delivery.values)
+      .enter()
+      .append('g')
+      .each(function (d) {
+        var workflow = d3.select(this)
 
-      var startedAt = d['started-at']
-      var endedAt = d['ended-at']
-      var searchEnd = d['search-end']
-      var nonsearchEnd = d['nonsearch-end']
+        var startedAt = d['started-at']
+        var endedAt = d['ended-at']
+        var searchEnd = d['search-end']
+        var nonsearchEnd = d['nonsearch-end']
 
-      var nonsearchEPT = d.nonSearchEPT
-      var searchEPT = d.searchEPT
-      var releaseEPT = d.releaseEPT
-      var EPT = d.EPT
+        var nonsearchEPT = d.nonSearchEPT
+        var searchEPT = d.searchEPT
+        var releaseEPT = d.releaseEPT
+        var EPT = d.EPT
 
-      if (startedAt & startedAt < _now) {
         var yPos = -3
         if (utils.inSubstepLocation(d)) {
           var substep1State = utils.calculateDelayState(startedAt, nonsearchEnd, nonsearchEPT)
           var substep2State = utils.calculateDelayState(nonsearchEnd, searchEnd, searchEPT)
           var substep3State = utils.calculateDelayState(searchEnd, endedAt, releaseEPT)
 
+          var currentSubStep = utils.getCurrentSubstep(d)
+
           workflow.append('text')
-            .attr('x1', xScale(startedAt))
-            .attr('y', yPos)
-            .text(function (d, i) {
-              var id = d.locationOrder[d.step - 1]
-              return _.find(_DS.locations, {id: id}).abbr
+          .attr('x', function (d) {
+            if (currentSubStep === 0) {
+              return xScale(d.eta)
+            }
+            return xScale(d['started-at'])
+          })
+          .attr('y', yPos)
+          .text(function (d, i) {
+            var id = d.locationOrder[d.step - 1]
+            return _.find(_DS.locations, {id: id}).abbr + '.1'
+          })
+          .attr('class', function (d) {
+              return 'detailActualLabels step1 ' // + substep1State
             })
-            .attr('class', function (d) {
-              return 'detailActualLabels ' + substep1State
+          .attr('font-size', _DS.TIMELINE_PORT_LABEL_SIZE)
+
+          workflow.append('text')
+          .attr('x', function (d) { 
+            var xPos = null
+            if (currentSubStep === 0) {
+              xPos = d.eta.getTime() + d.nonSearchEPT * 60000
+            } else if (currentSubStep === 1) {
+              xPos = d['started-at'].getTime() + d.nonSearchEPT * 60000
+            } else {
+              xPos = d['nonsearch-end'].getTime()
+            }
+
+            return xScale(xPos)
+          })
+          .attr('y', function (d, i) {
+            var current = d3.select(this).attr('x')
+            var previous
+            if (currentSubStep === 0) {
+              previous = d.eta
+            } else {
+              previous = d['started-at']
+            }
+            previous = xScale(previous)
+            var distance = current - previous
+            if (distance < 24) {
+              return 13
+            } else {
+              return -3
+            }
+          })
+          .text(2)
+          .attr('class', function (d) {
+              return 'detailActualLabels step2 ' // + substep2State
             })
-            .attr('font-size', 14 + 'px')
+          .attr('font-size', _DS.TIMELINE_PORT_LABEL_SIZE)
 
-          if (nonsearchEnd & nonsearchEnd < _now) {
-            workflow.append('text')
-              .attr('x', function (d) { return xScale(nonsearchEnd)})
-              .attr('y', yPos)
-              .text(2)
-              .attr('class', function (d) {
-                return 'detailActualLabels ' + substep2State
-              })
-              .attr('font-size', 14 + 'px')
-          }
+          workflow.append('text')
+          .attr('x', function (d) { 
+            var xPos = null
+            if (currentSubStep === -1) {
+              xPos = d['search-end']
+            } else if (currentSubStep === 0) {
+              xPos = d.eta.getTime() + (d.nonSearchEPT + d.searchEPT) * 60000
+            } else if (currentSubStep === 1) {
+              xPos = d['started-at'].getTime() + (d.nonSearchEPT + d.searchEPT) * 60000
+            } else if (currentSubStep === 2) {
+                // Because step 2 is still in progress, step 2's ETA would be now + searchEPT
+                xPos = _now.getTime() + d.searchEPT * 60000
+              } else if (currentSubStep === 3) {
+                xPos = d['search-end']
+              }
 
-          if (searchEnd & searchEnd < _now) {
-            workflow.append('text')
-              .attr('x', function (d) { return xScale(searchEnd & searchEnd) })
-              .attr('y', yPos)
-              .text(3)
-              .attr('class', function (d) {
-                return 'detailActualLabels ' + substep3State
-              })
-              .attr('font-size', 14 + 'px')
-          }
+              return xScale(xPos)
+            })
+          .attr('y', function (d, i) {
+            var step3x = d3.select(this).attr('x')
+            var step1x
+            if (currentSubStep === 0) {
+              step1x = d.eta
+            } else {
+              step1x = d['started-at']
+            }
+            var step2x
+            if (currentSubStep === 0) {
+              step2x = d.eta.getTime() + d.nonSearchEPT * 60000
+            } else if (currentSubStep === 1) {
+              step2x = d['started-at'].getTime() + d.nonSearchEPT * 60000
+            } else {
+              step2x = d['nonsearch-end'].getTime()
+            }
+            step1x = xScale(step1x)
+            step2x = xScale(step2x)
+
+            var distance2 = step2x - step1x
+            if (distance2 >= 24) {
+              var distance32 = step3x - step2x
+              if (distance32 > 10) {
+                return -3
+              } else {
+                return 13
+              }
+            } else {
+              var distance31 = step3x - step1x
+              if (distance31 >= 24) {
+                return -3
+              } else {
+                return 13
+              }
+            }
+          })
+          .text(3)
+          .attr('class', function (d) {
+              return 'detailActualLabels step3 ' // + substep3State
+            })
+          .attr('font-size', _DS.TIMELINE_PORT_LABEL_SIZE)
+
         } else {
           workflow.append('text')
-            .attr('x', function (d) { return xScale(startedAt) })
-            .attr('y', yPos)
-            .text(function (workflow, i) {
-              var locationName = utils.getLocationNameFromWorkflow(d)
-              return _.find(_DS.LOCATION_META, {name: locationName}).abbr
-            })
-            .attr('class', function (d) {
-              return 'detailActualLabels ' + d.states[0]
-            })
-            .attr('font-size', 14 + 'px')
+          .attr('x', function (d) {
+            return xScale(startedAt || d.eta)
+          })
+          .attr('y', yPos)
+          .text(function (workflow, i) {
+            var locationName = utils.getLocationNameFromWorkflow(d)
+            return _.find(_DS.LOCATION_META, {name: locationName}).abbr
+          })
+          .attr('class', function (d) {
+            return 'detailActualLabels ' // + d.states[0]
+          })
+          .attr('font-size', _DS.TIMELINE_PORT_LABEL_SIZE)
         }
-      }
-    })
+      })
+  }
 
   detailDeliveryDataGroup.append('image')
     .attr('xlink:href', function (i) {
@@ -646,6 +732,7 @@ function displayDetail (delivery) {
     .attr('transform', 'translate(' + stationTextPadding.left + ',' + (detailDeliveryRectY - 50 + detailPadding + eventHeight * 2 - 7) + ')')
     .attr('class', 'detailCommunicationLabelsGroup')
 
+  // The schedule and actual labels
   detailCommunicationLabelsGroup
     .selectAll('.detailCommunicationDefaultLabel')
     .data(inspectionLabels)
@@ -658,6 +745,7 @@ function displayDetail (delivery) {
     .attr('class', 'detailCommunicationDefaultLabel name')
     .attr('font-size', 14 + 'px')
 
+  // all the event labels
   detailCommunicationLabelsGroup
     .selectAll('.detailCommunicationLabel')
     .data(_POSTS)

@@ -177,11 +177,22 @@ function retrieveDeliveries () {
 
       _DS.events = pairEvents(apiResponse)
 
-      var apiWorkflows = _.filter(apiResponse.included, {type: 'workflows'})
+      var deliveryIDs = _.map(_DS.deliveries, 'id') // For edge cases where workflows have deliveries that are not included in the deliveries all endpoint
+      var apiWorkflows = _.filter(apiResponse.included, function (workflow) {
+        return workflow.type === 'workflows' && _.includes(deliveryIDs, workflow.relationships.delivery.data.id)
+      })
 
       var cleandWorkflows = apiWorkflows.map(function (workflow) {
         var deliveryId = workflow.relationships.delivery['data']['id']
         var deliveryRaw = _.find(_DS.deliveries, {id: deliveryId})
+        var boaID = deliveryRaw.relationships.boa.data.id
+        var destinationName = _.find(apiResponse.included, {type: 'boas', id: boaID}).attributes.boa['destination.name']
+        var route = _.find(_DS.routes, {name: destinationName})
+
+        workflow.attributes.locationOrder = _.map(route.order, function (portName) {
+          return _.find(_DS.locations, {abbr: portName}).id
+        })
+
         workflow.attributes.id = workflow['id']
         workflow.attributes.deliveryId = parseInt(deliveryId)
 
@@ -193,8 +204,8 @@ function retrieveDeliveries () {
         _.each(importantDates, function (item) {
           workflow.attributes[item] = utils.getNullOrDate(workflow.attributes[item])
         })
-
-        workflow.attributes.locationOrder = utils.getLocationOrderForDelivery(workflow.attributes.deliveryId, apiWorkflows)
+        var unusedAttributes = ['nonsearch-ept', 'search-ept', 'release-ept', 'estimated-processing-time']
+        workflow.attributes = _.omit(workflow.attributes, unusedAttributes)
 
         return workflow.attributes
       })

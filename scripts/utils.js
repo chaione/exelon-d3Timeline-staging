@@ -11,7 +11,7 @@ function _getLocationOrderForDelivery (deliveryId, workflows) {
 function _prepareEventsForRendering (events) {
   // take fully detailed events
   // expand to multiple POSTS
-  // and get rid of unnecessary attribuets
+  // and get rid of unnecessary attributes
   // we only care about {timestamp, endtimestamp, responsible, yIndex}
 
   var responders = _.map(_POSTS, 'abbr')
@@ -32,6 +32,15 @@ function _prepareEventsForRendering (events) {
 
 function _getEPTFromWorkflow (workflow) {
   var locationName = utils.getLocationNameFromWorkflow(workflow)
+  if (locationName === 'Sally Port') {
+    var locationId = _.find(_DS.locations, {name: locationName}).id
+    var subLocations = _.slice(workflow.locationOrder, 0, workflow.step - 1)
+
+    if (_.includes(subLocations, locationId)) {
+      return _.find(_DS.LOCATION_META, {name: 'SP Exit'}).epts
+    }
+  } 
+
   return _.find(_DS.LOCATION_META, {name: locationName}).epts
 }
 
@@ -64,6 +73,14 @@ function _getLocationNameFromWorkflow (workflow) {
 }
 
 function _getCurrentSubstep (workflow) {
+  if (workflow['ended-at']) {
+    return -1
+  }
+  
+  if (!workflow['started-at']) {
+    return 0
+  }
+
   if (!workflow['nonsearch-end']) {
     return 1
   }
@@ -78,7 +95,14 @@ function _getCurrentSubstep (workflow) {
 function _inSubstepLocation (workflow) {
   var locationName = utils.getLocationNameFromWorkflow(workflow)
 
-  return _.includes(_HAS_SUBSTEP_LOCATIONS, locationName)
+  if (locationName === 'Sally Port') {
+    var locationId = _.find(_DS.locations, {name: locationName}).id
+    var subLocations = _.slice(workflow.locationOrder, 0, workflow.step - 1)
+
+    return !_.includes(subLocations, locationId)
+  }
+
+  return _.includes(_HAS_SUBSTEP_LOCATIONS, locationName) 
 }
 
 function _getCurrentWorkflow (workflows) {
@@ -327,9 +351,14 @@ function _calculateWorkflowETAs (workflows) {
           var lastWorkflow = orderedWorkflows[index - 1]
           var epts = utils.getEPTFromWorkflow(lastWorkflow)
           var totalEPT = 0
+
           if (utils.inSubstepLocation(lastWorkflow)) {
             var substep = utils.getCurrentSubstep(lastWorkflow)
-            totalEPT = _.sum(_.slice(epts, substep - 1, epts.length))
+            if (substep === 0) {
+              totalEPT = _.sum(epts)
+            } else {
+              totalEPT = _.sum(_.slice(epts, substep - 1, epts.length))
+            }
           } else {
             totalEPT = epts[0]
           }

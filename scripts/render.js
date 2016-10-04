@@ -39,7 +39,7 @@ function moveXAxis (a, b) {
 }
 
 function render (data) {
-  console.log('rendering...........')
+  console.log('rendering...........', new Date().toString())
 
   outerWidth = document.documentElement.clientWidth
   outerHeight = document.documentElement.clientHeight - 83

@@ -172,9 +172,9 @@ function displayDetail (delivery) {
     .attr('y', 46)
     .text(function () {
       if (delivery.delay > 15) {
-        return 'Δ' + delivery.delay
+        return 'Δ' + delivery.delay + ' min'
       } else {
-        return '+' + Math.abs(delivery.delay)
+        return '+' + Math.abs(delivery.delay) + ' min'
       }
     })
     .attr('class', function (d) {
@@ -537,7 +537,7 @@ function displayDetail (delivery) {
           .attr('font-size', _DS.TIMELINE_PORT_LABEL_SIZE)
 
           workflow.append('text')
-          .attr('x', function (d) { 
+          .attr('x', function (d) {
             var xPos = null
             if (currentSubStep === 0) {
               xPos = d.eta.getTime() + d.nonSearchEPT * 60000
@@ -572,7 +572,7 @@ function displayDetail (delivery) {
           .attr('font-size', _DS.TIMELINE_PORT_LABEL_SIZE)
 
           workflow.append('text')
-          .attr('x', function (d) { 
+          .attr('x', function (d) {
             var xPos = null
             if (currentSubStep === -1) {
               xPos = d['search-end']

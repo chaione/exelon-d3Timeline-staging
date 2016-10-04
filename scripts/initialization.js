@@ -38,6 +38,8 @@ var _HAS_SUBSTEP_LOCATIONS = [
 ]
 
 var _DS = {
+  POLL_RATE: 45000,
+  IS_REFRESHING: false,
   TIMELINE_PORT_LABEL_SIZE: '12px',
   AHEAD_OR_BEHIND_PCT: 0.5,
   isDetailDisplayed: false,
@@ -130,7 +132,6 @@ var _VEHICLE_TYPE_TO_IMG = {
   'null': 'null'
 }
 
-var _POLL_RATE = 2455000
 // var url = 'https://exelon-api.herokuapp.com/v1/'
 // var url = 'https://exelon-api-production.herokuapp.com/v1/'
 
@@ -147,7 +148,7 @@ var bearerToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicm9sZSIsImV4
 // Production
 // var url = 'https://vsap-ccc-02v.exelonds.com/v1/'
 // var siteId = 10000
-// var bearerToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicm9sZSIsImlhdCI6MTQ3MDMxNzQ2MX0.86TwRbaqlfu7pv14NZ6ZF-RZKfUDLXtm9-5_2TGf4Mg'
+// var bearerToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicm9sZSIsImlhdCI6MTQ3Mzg2MjM2Mn0.HhyVOggZ6CoEM7D9x2tWGJtl1a6Onb9StghSONhVjHA'
 
 var titleHeight = 83
 // Calculated variables

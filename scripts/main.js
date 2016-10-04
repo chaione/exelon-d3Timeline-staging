@@ -10,5 +10,17 @@ setupSvgStructure()
 
 // Create Data
 retrieveDeliveries()
-setInterval(retrieveDeliveries, _POLL_RATE)
+setInterval(retrieveDeliveries, _DS.POLL_RATE)
+
+// Bind Refresh Button
+$(document).ready(function () {
+  $('#refresh-button').on('click', function () {
+    if (!_DS.IS_REFRESHING) {
+      $(this).addClass('active')
+      _DS.IS_REFRESHING = true
+      retrieveDeliveries()
+    }
+  })
+})
+
 window.onresize = resize

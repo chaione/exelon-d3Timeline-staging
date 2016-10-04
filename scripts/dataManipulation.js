@@ -140,6 +140,11 @@ function resize () {
   render(_DS.locationWithDeliveries)
 }
 
+function stopRefreshing () {
+  $('#refresh-button').removeClass('active')
+  _DS.IS_REFRESHING = false
+}
+
 function retrieveDeliveries () {
   $.ajax({
     url: url + 'deliveries?filter=all',
@@ -148,6 +153,7 @@ function retrieveDeliveries () {
       'Authorization': 'Bearer ' + bearerToken
     },
     success: function (apiResponse) {
+      stopRefreshing()
       _DS.deliveries = _.filter(apiResponse.data, {type: 'deliveries'})
 
       _DS.locations = utils.cleanupLocationData(
@@ -187,7 +193,16 @@ function retrieveDeliveries () {
         var deliveryRaw = _.find(_DS.deliveries, {id: deliveryId})
         var boaID = deliveryRaw.relationships.boa.data.id
         var destinationName = _.find(apiResponse.included, {type: 'boas', id: boaID}).attributes.boa['destination.name']
-        var route = _.find(_DS.routes, {name: destinationName})
+        var route
+        if (!destinationName) {
+          route = _.find(_DS.routes, function (route) {
+            return route.order.length === _.filter(apiWorkflows, function (wf) {
+              return wf.relationships.delivery['data']['id'] === deliveryId
+            }).length
+          })
+        } else {
+          route = _.find(_DS.routes, {name: destinationName})
+        }
 
         workflow.attributes.locationOrder = _.map(route.order, function (portName) {
           return _.find(_DS.locations, {abbr: portName}).id

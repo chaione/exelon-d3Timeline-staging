@@ -45,9 +45,10 @@ var _DS = {
   isDetailDisplayed: false,
 
   routes: [
-    {name: 'warehouse',         order: ['S1', 'SG', 'WH', 'SG', 'EX'] },
-    {name: 'pa',                order: ['S1', 'SG', 'SP', 'PA', 'SP', 'SG', 'EX'] },
-    {name: 'warehouse_and_pa',  order: ['S1', 'SG', 'WH', 'SP', 'PA', 'SP', 'SG', 'EX'] },
+    { name: 'oca',              order: ['S1', 'EX'] },
+    { name: 'warehouse',        order: ['S1', 'SG', 'WH', 'SG', 'EX'] },
+    { name: 'pa',               order: ['S1', 'SG', 'SP', 'PA', 'SP', 'SG', 'EX'] },
+    { name: 'warehouse_and_pa', order: ['S1', 'SG', 'WH', 'SP', 'PA', 'SP', 'SG', 'EX'] },
   ],
 
   LOCATION_META: [
@@ -138,7 +139,7 @@ var _VEHICLE_TYPE_TO_IMG = {
 // Staging
 var url = 'https://exelon-api-staging.herokuapp.com/v1/'
 var siteId = 1
-var bearerToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicm9sZSIsImV4cCI6MTQ3MzIwNTc4MiwiaWF0IjoxNDczMTc2OTgyfQ.fAL2tGdrLdnAGcf_Yf-V1kX1QjirY6btJFQLOoTqMVE'
+var bearerToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicm9sZSIsImlhdCI6MTQ3NTc2ODU4N30.-LkRzNzaZtkVD_C8XxS-aYKJNAhQM44X_z3h-kbWyGM'
 
 // QA
 // var url = 'https://exelon-api-qa.herokuapp.com/v1/'
